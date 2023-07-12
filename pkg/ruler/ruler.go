@@ -520,7 +520,8 @@ func (r *Ruler) run(ctx context.Context) error {
 			// replication set which we use to compare with the previous state.
 			currRingState, _ := r.ring.GetAllHealthy(RuleEvalRingOp)
 
-			if ring.HasReplicationSetChanged(ringLastState, currRingState) {
+			// HasReplicationSetChanged returns false in case ring state has changed
+			if !ring.HasReplicationSetChanged(ringLastState, currRingState) {
 				ringLastState = currRingState
 				r.syncRules(ctx, nil, rulerSyncReasonRingChange, true)
 			}
